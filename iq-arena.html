@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQ Arena</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#07070c;
+  --bg-elev:#12121c;
+  --bg-card:#16161f;
+  --line:#26263a;
+  --violet:#8b5cf6;
+  --cyan:#22d3ee;
+  --pink:#ec4899;
+  --gold:#f5c542;
+  --text:#eceaf7;
+  --text-dim:#8b899e;
+  --danger:#f14668;
+  --good:#34d399;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(139,92,246,.18), transparent 60%),
+    radial-gradient(ellipse 800px 500px at 100% 0%, rgba(34,211,238,.12), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+}
+h1,h2,h3,.disp{font-family:'Space Grotesk',sans-serif;}
+button{font-family:'Inter',sans-serif;cursor:pointer;}
+::selection{background:var(--violet);color:#fff;}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important;}}
+
+.wrap{max-width:960px;margin:0 auto;padding:18px 16px 60px;}
+
+/* topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-orb{
+  width:36px;height:36px;border-radius:50%;
+  background:conic-gradient(from 180deg, var(--violet), var(--cyan), var(--pink), var(--violet));
+  box-shadow:0 0 22px rgba(139,92,246,.55);
+  animation:spin 6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.brand-name{font-size:20px;font-weight:700;letter-spacing:.3px;}
+.brand-name span{color:var(--cyan);}
+.coin-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg-card);border:1px solid var(--line);
+  padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;
+}
+.coin-pill .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);}
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin-bottom:22px;border-bottom:1px solid var(--line);overflow-x:auto;}
+.tab-btn{
+  background:none;border:none;color:var(--text-dim);padding:10px 16px;font-size:14.5px;
+  font-weight:600;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;
+}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+
+.card{
+  background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:22px;
+}
+.muted{color:var(--text-dim);}
+.grad-btn{
+  background:linear-gradient(90deg,var(--violet),var(--cyan));border:none;color:#0a0a12;
+  font-weight:700;padding:12px 22px;border-radius:11px;font-size:15px;transition:.15s;
+}
+.grad-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.grad-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.ghost-btn{
+  background:transparent;border:1px solid var(--line);color:var(--text);
+  padding:11px 20px;border-radius:11px;font-size:14.5px;font-weight:600;transition:.15s;
+}
+.ghost-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* ===== TEST TAB ===== */
+.hero-row{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:22px;}
+.gauge-wrap{position:relative;width:150px;height:150px;flex-shrink:0;}
+.gauge-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge-num b{font-family:'Space Grotesk';font-size:30px;}
+.gauge-num small{color:var(--text-dim);font-size:11px;letter-spacing:.5px;}
+.hero-text h2{margin:0 0 8px;font-size:24px;}
+.hero-text p{color:var(--text-dim);margin:0 0 14px;max-width:420px;line-height:1.5;font-size:14.5px;}
+
+.q-progress{display:flex;gap:5px;margin-bottom:18px;}
+.q-progress i{flex:1;height:5px;border-radius:3px;background:var(--line);}
+.q-progress i.done{background:var(--cyan);}
+.q-progress i.now{background:var(--violet);}
+.q-text{font-size:19px;font-weight:600;margin:4px 0 20px;line-height:1.4;}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.opts{grid-template-columns:1fr;}}
+.opt-btn{
+  text-align:left;background:var(--bg-elev);border:1px solid var(--line);color:var(--text);
+  padding:14px 16px;border-radius:12px;font-size:15px;transition:.12s;
+}
+.opt-btn:hover{border-color:var(--violet);background:#1a1a28;}
+.opt-btn.correct{border-color:var(--good);background:rgba(52,211,153,.12);}
+.opt-btn.wrong{border-color:var(--danger);background:rgba(241,70,104,.12);}
+.opt-btn:disabled{cursor:default;}
+
+.result-box{text-align:center;padding:10px 0 4px;}
+.result-box .big{font-family:'Space Grotesk';font-size:52px;font-weight:700;background:linear-gradient(90deg,var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.result-row{display:flex;justify-content:center;gap:26px;margin:18px 0 22px;flex-wrap:wrap;}
+.result-stat{text-align:center;}
+.result-stat b{display:block;font-size:20px;font-family:'Space Grotesk';}
+.result-stat small{color:var(--text-dim);font-size:12px;}
+
+
+/* ===== IMAGE IQ TEST ===== */
+.image-test-menu{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:650px){.image-test-menu{grid-template-columns:1fr;}}
+.image-test-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:14px;padding:20px;transition:.15s;}
+.image-test-card:hover{border-color:var(--violet);transform:translateY(-2px);}
+.image-test-card h3{margin:0 0 8px;font-size:17px;}
+.image-test-card p{color:var(--text-dim);font-size:13.5px;line-height:1.5;margin:0 0 15px;}
+.picture-box{background:#0b0b14;border:1px solid var(--line);border-radius:14px;padding:18px;margin:10px 0 18px;display:flex;justify-content:center;align-items:center;min-height:230px;overflow:hidden;}
+.picture-box svg{max-width:100%;height:auto;}
+.image-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.image-opt{background:var(--bg-elev);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:130px;display:flex;align-items:center;justify-content:center;transition:.12s;}
+.image-opt:hover{border-color:var(--violet);}
+.image-opt svg{max-width:100%;height:100px;}
+@media(max-width:520px){.image-options{grid-template-columns:1fr;}.image-opt{min-height:110px;}}
+.test-type-badge{display:inline-block;font-size:11px;color:var(--cyan);border:1px solid rgba(34,211,238,.35);padding:5px 9px;border-radius:999px;margin-bottom:9px;font-weight:700;letter-spacing:.4px;}
+
+/* ===== SHOP ===== */
+.shop-cats{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.cat-chip{background:var(--bg-elev);border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:600;}
+.cat-chip.active{color:#0a0a12;background:var(--cyan);border-color:var(--cyan);}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+.item-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;}
+.item-preview{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid var(--line);}
+.item-name{font-size:13.5px;font-weight:600;margin-bottom:2px;}
+.item-cost{color:var(--gold);font-size:12.5px;margin-bottom:10px;}
+.item-btn{width:100%;padding:8px;border-radius:9px;font-size:13px;font-weight:700;border:none;}
+.item-btn.owned{background:var(--line);color:var(--text-dim);}
+.item-btn.equipped{background:var(--good);color:#06251a;}
+.item-btn.buy{background:linear-gradient(90deg,var(--violet),var(--cyan));color:#0a0a12;}
+.item-btn.locked{background:var(--bg-card);color:var(--text-dim);}
+
+/* ===== PROFILE / AVATAR ===== */
+.profile-top{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-bottom:22px;}
+.avatar-shell{width:130px;height:130px;position:relative;flex-shrink:0;}
+.avatar-body{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:.2s;}
+.avatar-hat{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:44px;}
+.avatar-face{font-size:34px;}
+.name-input{
+  background:var(--bg-elev);border:1px solid var(--line);color:var(--text);
+  padding:10px 14px;border-radius:10px;font-size:16px;font-weight:600;width:220px;max-width:60vw;
+}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+.stat-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;}
+.stat-card b{display:block;font-family:'Space Grotesk';font-size:20px;}
+.stat-card small{color:var(--text-dim);font-size:12px;}
+
+/* ===== DUEL ===== */
+.duel-choice{display:flex;gap:14px;flex-wrap:wrap;}
+.duel-card{flex:1;min-width:220px;background:var(--bg-elev);border:1px solid var(--line);border-radius:14px;padding:20px;}
+.duel-card h3{margin:0 0 8px;font-size:16px;}
+.code-input{
+  background:var(--bg-card);border:1px solid var(--line);color:var(--text);
+  padding:11px 14px;border-radius:10px;font-size:18px;letter-spacing:3px;text-align:center;width:120px;margin-right:10px;
+}
+.room-code-big{font-family:'Space Grotesk';font-size:44px;font-weight:700;letter-spacing:8px;color:var(--cyan);text-align:center;margin:10px 0;}
+.pulse-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);display:inline-block;animation:pulse 1.2s infinite;margin-right:6px;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+.vs-row{display:flex;align-items:center;justify-content:center;gap:24px;margin:20px 0;}
+.vs-player{text-align:center;}
+.vs-avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 8px;}
+.vs-mid{font-family:'Space Grotesk';font-weight:700;color:var(--text-dim);font-size:18px;}
+.winner-banner{text-align:center;font-family:'Space Grotesk';font-size:22px;font-weight:700;margin:14px 0;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------- storage helpers ---------- */
+async function sget(key, shared){ try{ const r = await window.storage.get(key, !!shared); return r ? r.value : null; }catch(e){ return null; } }
+async function sset(key, value, shared){ try{ return await window.storage.set(key, value, !!shared); }catch(e){ return null; } }
+
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function seededShuffle(arr, seed){
+  const rng = mulberry32(seed);
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function shuffleRandom(arr){ return seededShuffle(arr, Math.floor(Math.random()*1e9)); }
+
+/* ---------- question bank ---------- */
+const BANK = [
+  {q:"Продовжте послідовність: 2, 4, 8, 16, ?", o:["24","32","20","64"], a:1},
+  {q:"Продовжте послідовність: 1, 4, 9, 16, 25, ?", o:["30","36","32","49"], a:1},
+  {q:"Продовжте послідовність: 3, 6, 9, 12, ?", o:["14","16","15","18"], a:2},
+  {q:"Продовжте послідовність: 5, 10, 20, 40, ?", o:["60","70","80","50"], a:2},
+  {q:"Продовжте послідовність: 1, 1, 2, 3, 5, 8, ?", o:["11","12","13","10"], a:2},
+  {q:"Продовжте послідовність: 2, 6, 18, 54, ?", o:["108","162","216","144"], a:1},
+  {q:"Яке слово зайве?", o:["Яблуко","Банан","Морква","Груша"], a:2},
+  {q:"Яке слово зайве?", o:["Собака","Кіт","Стілець","Кінь"], a:2},
+  {q:"Яке слово зайве?", o:["Трикутник","Квадрат","Коло","Дерево"], a:3},
+  {q:"Яке слово зайве?", o:["Червоний","Синій","Зелений","Важкий"], a:3},
+  {q:"Рука : Пальці = Дерево : ?", o:["Листя","Земля","Небо","Вода"], a:0},
+  {q:"Книга : Читати = Їжа : ?", o:["Готувати","Їсти","Купувати","Мити"], a:1},
+  {q:"Годинник : Час = Термометр : ?", o:["Погода","Температура","Скло","Ртуть"], a:1},
+  {q:"Птах : Гніздо = Людина : ?", o:["Робота","Дім","Місто","Сім'я"], a:1},
+  {q:"Продовжте буквений ряд: A, C, E, G, ?", o:["H","I","F","J"], a:1},
+  {q:"Продовжте буквений ряд: B, D, F, H, ?", o:["I","K","J","G"], a:2},
+  {q:"Якщо всі коти — тварини, і Мурчик — кіт, то Мурчик — це:", o:["Птах","Рослина","Тварина","Річ"], a:2},
+  {q:"У Марії 3 брати, і в кожного брата є одна сестра. Скільки сестер у братів?", o:["1","2","3","4"], a:0},
+  {q:"Що важче: кілограм пір'я чи кілограм заліза?", o:["Пір'я","Залізо","Однаково","Неможливо визначити"], a:2},
+  {q:"Продовжте послідовність: 7, 14, 21, 28, ?", o:["30","35","32","42"], a:1}
+];
+
+const IMAGE_BANK = [
+  {
+    q:"Яка фігура має бути наступною?",
+    picture:`<svg viewBox="0 0 420 210" width="420" height="210"><rect width="420" height="210" rx="14" fill="#10101b"/><circle cx="75" cy="105" r="38" fill="none" stroke="#22d3ee" stroke-width="8"/><rect x="150" y="67" width="76" height="76" fill="none" stroke="#8b5cf6" stroke-width="8"/><polygon points="315,65 355,140 275,140" fill="none" stroke="#ec4899" stroke-width="8"/><text x="210" y="190" text-anchor="middle" fill="#8b899e" font-size="15">○ → □ → △ → ?</text></svg>`,
+    o:[
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="28" fill="none" stroke="#22d3ee" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><polygon points="60,18 94,78 26,78" fill="none" stroke="#ec4899" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><rect x="32" y="22" width="56" height="56" fill="none" stroke="#8b5cf6" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><polygon points="60,15 90,35 90,70 60,88 30,70 30,35" fill="none" stroke="#f5c542" stroke-width="7"/></svg>`
+    ], a:3
+  },
+  {
+    q:"Знайди фігуру, яка продовжує закономірність.",
+    picture:`<svg viewBox="0 0 420 210" width="420" height="210"><rect width="420" height="210" rx="14" fill="#10101b"/><circle cx="75" cy="105" r="32" fill="#22d3ee"/><circle cx="165" cy="105" r="32" fill="none" stroke="#22d3ee" stroke-width="7"/><circle cx="255" cy="105" r="32" fill="#22d3ee"/><circle cx="345" cy="105" r="32" fill="none" stroke="#22d3ee" stroke-width="7"/><text x="210" y="180" text-anchor="middle" fill="#8b899e" font-size="15">● → ○ → ● → ○ → ?</text></svg>`,
+    o:[
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="28" fill="#22d3ee"/></svg>`,
+      `<svg viewBox="0 0 120 100"><rect x="32" y="22" width="56" height="56" fill="#22d3ee"/></svg>`,
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="28" fill="none" stroke="#22d3ee" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><polygon points="60,18 94,78 26,78" fill="#22d3ee"/></svg>`
+    ], a:0
+  },
+  {
+    q:"Яка плитка логічно завершує ряд?",
+    picture:`<svg viewBox="0 0 420 210" width="420" height="210"><rect width="420" height="210" rx="14" fill="#10101b"/><g stroke="#8b5cf6" stroke-width="7" fill="none"><rect x="45" y="65" width="70" height="70"/><rect x="145" y="65" width="70" height="70"/><rect x="245" y="65" width="70" height="70"/></g><circle cx="80" cy="100" r="13" fill="#22d3ee"/><circle cx="180" cy="100" r="13" fill="#22d3ee"/><circle cx="180" cy="100" r="25" fill="none" stroke="#22d3ee" stroke-width="5"/><circle cx="280" cy="100" r="13" fill="#22d3ee"/><circle cx="280" cy="100" r="25" fill="none" stroke="#22d3ee" stroke-width="5"/><circle cx="280" cy="100" r="37" fill="none" stroke="#22d3ee" stroke-width="5"/></svg>`,
+    o:[
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="13" fill="#22d3ee"/><circle cx="60" cy="50" r="25" fill="none" stroke="#22d3ee" stroke-width="5"/><circle cx="60" cy="50" r="37" fill="none" stroke="#22d3ee" stroke-width="5"/></svg>`,
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="13" fill="#22d3ee"/></svg>`,
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="13" fill="#22d3ee"/><circle cx="60" cy="50" r="25" fill="none" stroke="#22d3ee" stroke-width="5"/></svg>`,
+      `<svg viewBox="0 0 120 100"><rect x="25" y="20" width="70" height="60" fill="none" stroke="#ec4899" stroke-width="6"/></svg>`
+    ], a:0
+  },
+  {
+    q:"Яка стрілка продовжує обертання?",
+    picture:`<svg viewBox="0 0 420 210" width="420" height="210"><rect width="420" height="210" rx="14" fill="#10101b"/><g fill="#f5c542"><path d="M75 55h18v75H75z"/><path d="M55 55l29-25 29 25z"/><path d="M165 75h75v18h-75z"/><path d="M240 55l25 29-25 29z"/><path d="M325 80h18v75h-18z"/><path d="M305 155l29 25 29-25z"/></g><text x="210" y="195" text-anchor="middle" fill="#8b899e" font-size="15">↑ → ↓ → ?</text></svg>`,
+    o:[
+      `<svg viewBox="0 0 120 100"><path d="M52 78h16V28h20L60 8 32 28h20z" fill="#f5c542"/></svg>`,
+      `<svg viewBox="0 0 120 100"><path d="M42 32h48v16H42V68L20 50l22-18z" fill="#f5c542"/></svg>`,
+      `<svg viewBox="0 0 120 100"><path d="M52 22h16v50h20L60 92 32 72h20z" fill="#f5c542"/></svg>`,
+      `<svg viewBox="0 0 120 100"><path d="M78 32H28v16h50v20l22-28-22-28z" fill="#f5c542"/></svg>`
+    ], a:2
+  },
+  {
+    q:"Яка фігура зайва?",
+    picture:`<svg viewBox="0 0 420 210" width="420" height="210"><rect width="420" height="210" rx="14" fill="#10101b"/><g stroke="#ec4899" stroke-width="7" fill="none"><circle cx="75" cy="105" r="34"/><rect x="135" y="71" width="68" height="68"/><polygon points="270,70 310,140 230,140"/><polygon points="350,72 390,105 350,138 310,105"/></g></svg>`,
+    o:[
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="30" fill="none" stroke="#ec4899" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><rect x="30" y="20" width="60" height="60" fill="none" stroke="#ec4899" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><polygon points="60,18 92,78 28,78" fill="none" stroke="#ec4899" stroke-width="7"/></svg>`,
+      `<svg viewBox="0 0 120 100"><polygon points="60,15 92,50 60,85 28,50" fill="none" stroke="#f5c542" stroke-width="7"/></svg>`
+    ], a:3
+  },
+  {
+    q:"Що має бути замість знака питання?",
+    picture:`<svg viewBox="0 0 420 210" width="420" height="210"><rect width="420" height="210" rx="14" fill="#10101b"/><g fill="none" stroke="#22d3ee" stroke-width="7"><rect x="45" y="65" width="70" height="70"/><rect x="175" y="65" width="70" height="70"/><rect x="305" y="65" width="70" height="70"/></g><circle cx="80" cy="100" r="18" fill="#22d3ee"/><circle cx="210" cy="100" r="18" fill="#22d3ee"/><text x="340" y="118" text-anchor="middle" fill="#ec4899" font-size="48" font-weight="700">?</text></svg>`,
+    o:[
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="18" fill="#22d3ee"/></svg>`,
+      `<svg viewBox="0 0 120 100"><circle cx="60" cy="50" r="18" fill="#22d3ee"/><circle cx="60" cy="50" r="34" fill="none" stroke="#22d3ee" stroke-width="6"/></svg>`,
+      `<svg viewBox="0 0 120 100"><rect x="30" y="20" width="60" height="60" fill="#22d3ee"/></svg>`,
+      `<svg viewBox="0 0 120 100"><polygon points="60,18 92,78 28,78" fill="#22d3ee"/></svg>`
+    ], a:1
+  }
+];
+
+
+/* ---------- shop items ---------- */
+const BODIES = [
+  {id:"b1",name:"Смарагд",cost:0,bg:"#10b981"},
+  {id:"b2",name:"Аметист",cost:50,bg:"#8b5cf6"},
+  {id:"b3",name:"Вогонь",cost:80,bg:"#f97316"},
+  {id:"b4",name:"Крига",cost:80,bg:"#22d3ee"},
+  {id:"b5",name:"Золото",cost:150,bg:"#eab308"},
+  {id:"b6",name:"Космос",cost:220,bg:"linear-gradient(135deg,#8b5cf6,#ec4899)"}
+];
+const HATS = [
+  {id:"h0",name:"Без капелюха",cost:0,emoji:""},
+  {id:"h1",name:"Корона",cost:120,emoji:"👑"},
+  {id:"h2",name:"Кепка",cost:60,emoji:"🧢"},
+  {id:"h3",name:"Циліндр",cost:100,emoji:"🎩"},
+  {id:"h4",name:"Ковбойський",cost:90,emoji:"🤠"},
+  {id:"h5",name:"Випускний",cost:110,emoji:"🎓"}
+];
+const FACES = [
+  {id:"f0",name:"Звичайне",cost:0,emoji:""},
+  {id:"f1",name:"Темні окуляри",cost:50,emoji:"🕶️"},
+  {id:"f2",name:"Розумні окуляри",cost:70,emoji:"🤓"},
+  {id:"f3",name:"Зірочки",cost:65,emoji:"🤩"},
+  {id:"f4",name:"Робот",cost:130,emoji:"🤖"}
+];
+const AURAS = [
+  {id:"a0",name:"Без аури",cost:0,glow:"none"},
+  {id:"a1",name:"Неонова",cost:100,glow:"0 0 34px #22d3ee"},
+  {id:"a2",name:"Вогняна",cost:100,glow:"0 0 34px #f97316"},
+  {id:"a3",name:"Райдужна",cost:180,glow:"0 0 40px #ec4899"}
+];
+function findItem(cat,id){ const m={body:BODIES,hat:HATS,face:FACES,aura:AURAS}[cat]; return m.find(i=>i.id===id); }
+
+/* ---------- state ---------- */
+let profile = null;
+let tab = "test";
+let shopCat = "body";
+let testState = null; // {questions, idx, score, answered, coinsEarned}
+let duelState = { screen:"menu", code:null, room:null, pollTimer:null };
+
+const defaultProfile = ()=>({
+  id: uid(), name:"Гравець", coins:0, bestScore:0, gamesPlayed:0,
+  owned:["b1","h0","f0","a0"], equipped:{body:"b1",hat:"h0",face:"f0",aura:"a0"}
+});
+
+async function loadProfile(){
+  let p = await sget("profile", false);
+  if(!p){ p = defaultProfile(); await sset("profile", p, false); }
+  else if(typeof p === "string"){ try{ p = JSON.parse(p); }catch(e){ p = defaultProfile(); } }
+  profile = p;
+}
+async function saveProfile(){ await sset("profile", profile, false); }
+
+/* ---------- avatar render ---------- */
+function avatarHTML(size, equipped){
+  const body = findItem("body", equipped.body) || BODIES[0];
+  const hat = findItem("hat", equipped.hat) || HATS[0];
+  const face = findItem("face", equipped.face) || FACES[0];
+  const aura = findItem("aura", equipped.aura) || AURAS[0];
+  return `<div class="avatar-body" style="width:${size}px;height:${size}px;background:${body.bg};box-shadow:${aura.glow};">
+    ${hat.emoji ? `<div class="avatar-hat" style="font-size:${size*0.34}px;top:${-size*0.17}px;">${hat.emoji}</div>`:""}
+    <div class="avatar-face" style="font-size:${size*0.26}px;">${face.emoji}</div>
+  </div>`;
+}
+
+/* ---------- render root ---------- */
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="brand"><div class="brand-orb"></div><div class="brand-name">IQ <span>Arena</span></div></div>
+      <div class="coin-pill"><span class="dot"></span>${profile.coins} монет</div>
+    </div>
+    <div class="tabs">
+      ${tabBtn("test","🧠 Тест")}
+      ${tabBtn("shop","🛍 Магазин")}
+      ${tabBtn("profile","👤 Профіль")}
+      ${tabBtn("duel","⚔️ Дуель з другом")}
+    </div>
+    <div id="tab-content"></div>
+  `;
+  document.getElementById("tab-content").innerHTML =
+    tab==="test" ? renderTest() :
+    tab==="shop" ? renderShop() :
+    tab==="profile" ? renderProfile() :
+    renderDuel();
+}
+function tabBtn(id,label){ return `<button class="tab-btn ${tab===id?"active":""}" data-tab="${id}">${label}</button>`; }
+
+/* ---------- TEST TAB ---------- */
+function startTest(seed, mode="normal"){
+  const source = mode==="image" ? IMAGE_BANK : BANK;
+  const pool = seed!=null ? seededShuffle(source, seed) : shuffleRandom(source);
+  testState = { questions: pool.slice(0, mode==="image" ? 6 : 10), idx:0, score:0, answered:false, coinsEarned:0, done:false, mode };
+}
+
+function renderTest(){
+  if(!testState){
+    return `
+      <div class="card">
+        <div class="hero-row">
+          ${gauge(profile.bestScore, "Кращий результат")}
+          <div class="hero-text">
+            <h2>Перевір свій мозок 🧠</h2>
+            <p>Обирай звичайний логічний тест або новий тест по картинках. Результати, монети та профіль залишаються спільними.</p>
+          </div>
+        </div>
+        <div class="image-test-menu">
+          <div class="image-test-card">
+            <div class="test-type-badge">КЛАСИЧНИЙ</div>
+            <h3>Логічний тест</h3>
+            <p>10 випадкових числових, словесних та логічних завдань.</p>
+            <button class="grad-btn" data-action="start-solo">Почати тест</button>
+          </div>
+          <div class="image-test-card">
+            <div class="test-type-badge">НОВИЙ РЕЖИМ</div>
+            <h3>IQ по картинках 🧩</h3>
+            <p>6 завдань із фігурами, закономірностями та візуальною логікою.</p>
+            <button class="grad-btn" data-action="start-image">Почати тест</button>
+          </div>
+        </div>
+      </div>`;
+  }
+  if(testState.done){
+    const iq = 70 + testState.score * (testState.mode==="image" ? 10 : 8);
+    return `
+      <div class="card result-box">
+        <div class="muted" style="letter-spacing:1px;font-size:13px;">РЕЗУЛЬТАТ — ${testState.mode==="image" ? "IQ ПО КАРТИНКАХ" : "КЛАСИЧНИЙ ТЕСТ"}</div>
+        <div class="big">${testState.score}/${testState.questions.length}</div>
+        <div class="result-row">
+          <div class="result-stat"><b>${iq}</b><small>ігровий IQ-бал</small></div>
+          <div class="result-stat"><b>+${testState.coinsEarned}</b><small>монет</small></div>
+          <div class="result-stat"><b>${profile.gamesPlayed}</b><small>тестів пройдено</small></div>
+        </div>
+        <button class="grad-btn" data-action="${testState.mode==="image" ? "start-image" : "start-solo"}">Пройти ще раз</button>
+        <button class="ghost-btn" data-action="back-tests" style="margin-left:10px;">До тестів</button>
+      </div>`;
+  }
+  const q = testState.questions[testState.idx];
+  const prog = testState.questions.map((_,i)=>{
+    const cls = i<testState.idx ? "done" : i===testState.idx ? "now" : "";
+    return `<i class="${cls}"></i>`;
+  }).join("");
+  if(testState.mode==="image"){
+    return `
+      <div class="card">
+        <div class="q-progress">${prog}</div>
+        <div class="muted" style="font-size:13px;margin-bottom:6px;">IQ ПО КАРТИНКАХ · Питання ${testState.idx+1} з ${testState.questions.length}</div>
+        <div class="q-text">${q.q}</div>
+        <div class="picture-box">${q.picture}</div>
+        <div class="image-options">
+          ${q.o.map((opt,i)=>`<button class="opt-btn image-opt" data-action="answer" data-i="${i}">${opt}</button>`).join("")}
+        </div>
+      </div>`;
+  }
+  return `
+    <div class="card">
+      <div class="q-progress">${prog}</div>
+      <div class="muted" style="font-size:13px;margin-bottom:6px;">Питання ${testState.idx+1} з ${testState.questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts">
+        ${q.o.map((opt,i)=>`<button class="opt-btn" data-action="answer" data-i="${i}">${opt}</button>`).join("")}
+      </div>
+    </div>`;
+}
+
+function gauge(score, label){
+  const pct = Math.min(100, score*10);
+  const deg = pct*3.6;
+  return `
+    <div class="gauge-wrap">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <circle cx="75" cy="75" r="64" fill="none" stroke="#26263a" stroke-width="12"/>
+        <circle cx="75" cy="75" r="64" fill="none" stroke="url(#g1)" stroke-width="12" stroke-linecap="round"
+          stroke-dasharray="${2*Math.PI*64}" stroke-dashoffset="${2*Math.PI*64*(1-pct/100)}" transform="rotate(-90 75 75)"/>
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#22d3ee"/>
+        </linearGradient></defs>
+      </svg>
+      <div class="gauge-num"><b>${score}/10</b><small>${label}</small></div>
+    </div>`;
+}
+
+async function handleAnswer(i){
+  if(testState.answered) return;
+  testState.answered = true;
+  const q = testState.questions[testState.idx];
+  const correct = i===q.a;
+  if(correct) testState.score++;
+  document.querySelectorAll(".opt-btn").forEach((btn,idx)=>{
+    btn.disabled = true;
+    if(idx===q.a) btn.classList.add("correct");
+    else if(idx===i) btn.classList.add("wrong");
+  });
+  await new Promise(r=>setTimeout(r,650));
+  testState.idx++;
+  testState.answered = false;
+  if(testState.idx >= testState.questions.length){
+    const coins = testState.score*15 + (testState.score===10 ? 50 : 0);
+    testState.coinsEarned = coins;
+    testState.done = true;
+    profile.coins += coins;
+    profile.gamesPlayed += 1;
+    if(testState.score > profile.bestScore) profile.bestScore = testState.score;
+    await saveProfile();
+  }
+  render();
+}
+
+/* ---------- SHOP TAB ---------- */
+function renderShop(){
+  const cats = [["body","Тіло"],["hat","Капелюх"],["face","Обличчя"],["aura","Аура"]];
+  const map = {body:BODIES, hat:HATS, face:FACES, aura:AURAS};
+  const items = map[shopCat];
+  return `
+    <div class="card">
+      <div class="shop-cats">
+        ${cats.map(([id,label])=>`<button class="cat-chip ${shopCat===id?"active":""}" data-shopcat="${id}">${label}</button>`).join("")}
+      </div>
+      <div class="shop-grid">
+        ${items.map(it=>itemCard(it)).join("")}
+      </div>
+    </div>`;
+}
+function itemCard(it){
+  const owned = profile.owned.includes(it.id);
+  const equipped = profile.equipped[shopCat]===it.id;
+  const preview = shopCat==="body"
+    ? `<div class="item-preview" style="background:${it.bg};"></div>`
+    : shopCat==="aura"
+      ? `<div class="item-preview" style="background:#1a1a28;box-shadow:${it.glow};"></div>`
+      : `<div class="item-preview">${it.emoji||"—"}</div>`;
+  let btn;
+  if(equipped) btn = `<button class="item-btn equipped" disabled>Одягнено ✓</button>`;
+  else if(owned) btn = `<button class="item-btn owned" data-action="equip" data-cat="${shopCat}" data-id="${it.id}">Одягнути</button>`;
+  else if(profile.coins>=it.cost) btn = `<button class="item-btn buy" data-action="buy" data-cat="${shopCat}" data-id="${it.id}">Купити за ${it.cost}</button>`;
+  else btn = `<button class="item-btn locked" disabled>Потрібно ${it.cost}</button>`;
+  return `<div class="item-card">${preview}<div class="item-name">${it.name}</div><div class="item-cost">${it.cost===0?"безкоштовно":it.cost+" 🪙"}</div>${btn}</div>`;
+}
+async function buyItem(cat,id){
+  const it = findItem(cat,id);
+  if(!it || profile.coins<it.cost || profile.owned.includes(id)) return;
+  profile.coins -= it.cost;
+  profile.owned.push(id);
+  profile.equipped[cat] = id;
+  await saveProfile();
+  render();
+}
+async function equipItem(cat,id){
+  profile.equipped[cat] = id;
+  await saveProfile();
+  render();
+}
+
+/* ---------- PROFILE TAB ---------- */
+function renderProfile(){
+  return `
+    <div class="card">
+      <div class="profile-top">
+        <div class="avatar-shell">${avatarHTML(130, profile.equipped)}</div>
+        <div>
+          <div class="muted" style="font-size:12px;margin-bottom:6px;">ІМ'Я ГРАВЦЯ</div>
+          <input class="name-input" id="name-input" value="${profile.name}" maxlength="16"/>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><b>${profile.coins}</b><small>монет</small></div>
+        <div class="stat-card"><b>${profile.bestScore}/10</b><small>кращий результат</small></div>
+        <div class="stat-card"><b>${profile.gamesPlayed}</b><small>тестів пройдено</small></div>
+      </div>
+    </div>`;
+}
+
+/* ---------- DUEL TAB ---------- */
+function stopPoll(){ if(duelState.pollTimer){ clearInterval(duelState.pollTimer); duelState.pollTimer=null; } }
+
+function renderDuel(){
+  if(duelState.screen==="menu"){
+    return `
+      <div class="card">
+        <h2 style="margin-top:0;">Дуель з другом ⚔️</h2>
+        <p class="muted">Створи кімнату, поділись кодом із другом — і подивись, хто набере більше балів в однаковому тесті.</p>
+        <div class="duel-choice">
+          <div class="duel-card">
+            <h3>Створити кімнату</h3>
+            <p class="muted" style="font-size:13.5px;">Ти отримаєш код для друга.</p>
+            <button class="grad-btn" data-action="duel-create">Створити</button>
+          </div>
+          <div class="duel-card">
+            <h3>Приєднатися</h3>
+            <p class="muted" style="font-size:13.5px;">Введи код кімнати друга.</p>
+            <input class="code-input" id="join-code" placeholder="0000" maxlength="4"/>
+            <button class="ghost-btn" data-action="duel-join">Увійти</button>
+          </div>
+        </div>
+      </div>`;
+  }
+  if(duelState.screen==="waiting"){
+    const players = duelState.room ? Object.values(duelState.room.players) : [];
+    return `
+      <div class="card" style="text-align:center;">
+        <div class="muted" style="font-size:13px;">КОД КІМНАТИ — надішли другу</div>
+        <div class="room-code-big">${duelState.code}</div>
+        <div class="muted" style="margin:14px 0;"><span class="pulse-dot"></span>Очікуємо другого гравця (${players.length}/2)...</div>
+        <button class="ghost-btn" data-action="duel-leave">Скасувати</button>
+      </div>`;
+  }
+  if(duelState.screen==="ready"){
+    const players = Object.values(duelState.room.players);
+    return `
+      <div class="card" style="text-align:center;">
+        <div class="muted" style="font-size:13px;margin-bottom:6px;">КІМНАТА ${duelState.code}</div>
+        <h2 style="margin:4px 0 14px;">Обидва гравці готові!</h2>
+        <div class="vs-row">
+          ${players.map(p=>`<div class="vs-player"><div class="vs-avatar" style="background:#8b5cf6;border-radius:50%;"></div><div>${escapeHTML(p.name)}</div></div>`).join(`<div class="vs-mid">VS</div>`)}
+        </div>
+        <button class="grad-btn" data-action="duel-start">Почати тест</button>
+      </div>`;
+  }
+  if(duelState.screen==="playing"){
+    return renderTest();
+  }
+  if(duelState.screen==="waitresult"){
+    return `
+      <div class="card" style="text-align:center;">
+        <div class="big" style="font-size:34px;">Твій результат: ${testState.score}/10</div>
+        <div class="muted" style="margin:14px 0;"><span class="pulse-dot"></span>Очікуємо результат друга...</div>
+      </div>`;
+  }
+  if(duelState.screen==="result"){
+    const me = duelState.room.players[profile.id];
+    const other = Object.entries(duelState.room.players).find(([pid])=>pid!==profile.id);
+    const otherP = other ? other[1] : {name:"Друг", score:0};
+    let banner, color;
+    if(me.score>otherP.score){ banner="Перемога! 🏆"; color="var(--good)"; }
+    else if(me.score<otherP.score){ banner="Поразка 😅"; color="var(--danger)"; }
+    else { banner="Нічия! 🤝"; color="var(--gold)"; }
+    return `
+      <div class="card" style="text-align:center;">
+        <div class="winner-banner" style="color:${color};">${banner}</div>
+        <div class="vs-row">
+          <div class="vs-player"><b style="font-size:24px;">${me.score}/10</b><div>${escapeHTML(profile.name)} (ти)</div></div>
+          <div class="vs-mid">VS</div>
+          <div class="vs-player"><b style="font-size:24px;">${otherP.score}/10</b><div>${escapeHTML(otherP.name)}</div></div>
+        </div>
+        <button class="grad-btn" data-action="duel-leave">До меню дуелей</button>
+      </div>`;
+  }
+}
+function escapeHTML(s){ return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+async function duelCreate(){
+  const code = String(Math.floor(1000+Math.random()*9000));
+  const room = { seed: Math.floor(Math.random()*1e9), players:{ [profile.id]: {name:profile.name, score:null, finished:false} } };
+  await sset("room:"+code, room, true);
+  duelState = { screen:"waiting", code, room, pollTimer:null };
+  render();
+  duelState.pollTimer = setInterval(pollRoom, 1800);
+}
+async function duelJoin(){
+  const input = document.getElementById("join-code");
+  const code = input ? input.value.trim() : "";
+  if(!code || code.length<4){ alert("Введи 4-значний код кімнати"); return; }
+  let room = await sget("room:"+code, true);
+  if(typeof room === "string"){ try{ room = JSON.parse(room); }catch(e){ room=null; } }
+  if(!room){ alert("Кімнату не знайдено"); return; }
+  if(!room.players[profile.id]){
+    if(Object.keys(room.players).length>=2){ alert("Кімната вже заповнена"); return; }
+    room.players[profile.id] = {name:profile.name, score:null, finished:false};
+    await sset("room:"+code, room, true);
+  }
+  duelState = { screen: Object.keys(room.players).length>=2 ? "ready" : "waiting", code, room, pollTimer:null };
+  render();
+  if(duelState.screen==="waiting") duelState.pollTimer = setInterval(pollRoom, 1800);
+}
+async function pollRoom(){
+  if(!duelState.code) return;
+  let room = await sget("room:"+duelState.code, true);
+  if(typeof room === "string"){ try{ room = JSON.parse(room); }catch(e){ room=null; } }
+  if(!room) return;
+  duelState.room = room;
+  const count = Object.keys(room.players).length;
+  if(duelState.screen==="waiting" && count>=2){
+    stopPoll();
+    duelState.screen = "ready";
+    render();
+  } else if(duelState.screen==="waitresult"){
+    const all = Object.values(room.players);
+    if(all.length>=2 && all.every(p=>p.finished)){
+      stopPoll();
+      duelState.screen = "result";
+      render();
+    }
+  }
+}
+async function duelStart(){
+  stopPoll();
+  duelState.screen = "playing";
+  startTest(duelState.room.seed);
+  render();
+}
+async function duelLeave(){
+  stopPoll();
+  duelState = { screen:"menu", code:null, room:null, pollTimer:null };
+  testState = null;
+  render();
+}
+async function finishDuelTest(){
+  let room = await sget("room:"+duelState.code, true);
+  if(typeof room === "string"){ try{ room = JSON.parse(room); }catch(e){ room=null; } }
+  if(!room) room = duelState.room;
+  room.players[profile.id] = {name:profile.name, score:testState.score, finished:true};
+  await sset("room:"+duelState.code, room, true);
+  duelState.room = room;
+  duelState.screen = "waitresult";
+  render();
+  duelState.pollTimer = setInterval(pollRoom, 1800);
+  pollRoom();
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click", async (e)=>{
+  const t = e.target;
+  if(t.dataset.tab){ tab = t.dataset.tab; render(); return; }
+  if(t.dataset.action==="start-solo"){ startTest(undefined,"normal"); render(); return; }
+  if(t.dataset.action==="start-image"){ startTest(undefined,"image"); render(); return; }
+  if(t.dataset.action==="back-tests"){ testState=null; render(); return; }
+  if(t.dataset.action==="answer"){ handleAnswer(parseInt(t.dataset.i)); return; }
+  if(t.dataset.shopcat){ shopCat = t.dataset.shopcat; render(); return; }
+  if(t.dataset.action==="buy"){ buyItem(t.dataset.cat, t.dataset.id); return; }
+  if(t.dataset.action==="equip"){ equipItem(t.dataset.cat, t.dataset.id); return; }
+  if(t.dataset.action==="duel-create"){ duelCreate(); return; }
+  if(t.dataset.action==="duel-join"){ duelJoin(); return; }
+  if(t.dataset.action==="duel-start"){ duelStart(); return; }
+  if(t.dataset.action==="duel-leave"){ duelLeave(); return; }
+});
+document.addEventListener("change", async (e)=>{
+  if(e.target.id==="name-input"){
+    profile.name = e.target.value.trim() || "Гравець";
+    await saveProfile();
+  }
+});
+
+/* intercept duel test completion */
+const origHandleAnswer = handleAnswer;
+handleAnswer = async function(i){
+  if(testState.answered) return;
+  testState.answered = true;
+  const q = testState.questions[testState.idx];
+  const correct = i===q.a;
+  if(correct) testState.score++;
+  document.querySelectorAll(".opt-btn").forEach((btn,idx)=>{
+    btn.disabled = true;
+    if(idx===q.a) btn.classList.add("correct");
+    else if(idx===i) btn.classList.add("wrong");
+  });
+  await new Promise(r=>setTimeout(r,650));
+  testState.idx++;
+  testState.answered = false;
+  if(testState.idx >= testState.questions.length){
+    testState.done = true;
+    if(duelState.screen==="playing"){
+      finishDuelTest();
+      return;
+    }
+    const coins = testState.score*15 + (testState.score===10 ? 50 : 0);
+    testState.coinsEarned = coins;
+    profile.coins += coins;
+    profile.gamesPlayed += 1;
+    if(testState.score > profile.bestScore) profile.bestScore = testState.score;
+    await saveProfile();
+  }
+  render();
+};
+
+/* ---------- init ---------- */
+(async function init(){
+  await loadProfile();
+  render();
+})();
+</script>
+</body>
+</html>
