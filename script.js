@@ -175,6 +175,159 @@ const IMAGE_BANK = [
   }
 ];
 
+
+/* ---------- DIFFERENCES IQ TEST ---------- */
+
+const DIFFERENCES_BANK = [
+  {
+    q: "Знайди 3 відмінності між картинками",
+    differences: [
+      { x: 85, y: 65, r: 22 },
+      { x: 210, y: 135, r: 22 },
+      { x: 335, y: 70, r: 22 }
+    ],
+    left: `
+      <svg viewBox="0 0 420 210" width="420" height="210">
+        <rect width="420" height="210" rx="14" fill="#10101b"/>
+
+        <!-- будинки -->
+        <rect x="35" y="100" width="75" height="75" fill="#8b5cf6"/>
+        <polygon points="25,100 72,55 120,100" fill="#ec4899"/>
+        <rect x="60" y="130" width="25" height="45" fill="#22d3ee"/>
+
+        <rect x="170" y="90" width="80" height="85" fill="#22d3ee"/>
+        <polygon points="160,90 210,45 260,90" fill="#8b5cf6"/>
+        <rect x="195" y="120" width="25" height="55" fill="#f5c542"/>
+
+        <rect x="300" y="105" width="80" height="70" fill="#f5c542"/>
+        <polygon points="290,105 340,60 390,105" fill="#8b5cf6"/>
+        <circle cx="340" cy="90" r="13" fill="#ec4899"/>
+
+        <!-- сонце -->
+        <circle cx="85" cy="65" r="20" fill="#f5c542"/>
+
+        <!-- дерево -->
+        <rect x="195" y="155" width="15" height="30" fill="#f97316"/>
+        <circle cx="202" cy="140" r="30" fill="#34d399"/>
+
+        <!-- хмарка -->
+        <circle cx="335" cy="70" r="18" fill="#22d3ee"/>
+        <circle cx="355" cy="70" r="13" fill="#22d3ee"/>
+      </svg>`,
+
+    right: `
+      <svg viewBox="0 0 420 210" width="420" height="210">
+        <rect width="420" height="210" rx="14" fill="#10101b"/>
+
+        <!-- будинки -->
+        <rect x="35" y="100" width="75" height="75" fill="#8b5cf6"/>
+        <polygon points="25,100 72,55 120,100" fill="#ec4899"/>
+        <rect x="60" y="130" width="25" height="45" fill="#22d3ee"/>
+
+        <rect x="170" y="90" width="80" height="85" fill="#22d3ee"/>
+        <polygon points="160,90 210,45 260,90" fill="#8b5cf6"/>
+        <rect x="195" y="120" width="25" height="55" fill="#f5c542"/>
+
+        <rect x="300" y="105" width="80" height="70" fill="#f5c542"/>
+        <polygon points="290,105 340,60 390,105" fill="#8b5cf6"/>
+        <circle cx="340" cy="90" r="13" fill="#34d399"/>
+
+        <!-- ВІДМІННІСТЬ 1: сонце стало меншим -->
+        <circle cx="85" cy="65" r="11" fill="#f5c542"/>
+
+        <!-- дерево -->
+        <rect x="195" y="155" width="15" height="30" fill="#f97316"/>
+        <!-- ВІДМІННІСТЬ 2: інша крона -->
+        <circle cx="202" cy="140" r="20" fill="#34d399"/>
+
+        <!-- хмарка -->
+        <circle cx="335" cy="70" r="18" fill="#22d3ee"/>
+        <!-- ВІДМІННІСТЬ 3: немає другого кола -->
+      </svg>`
+  },
+
+  {
+    q: "Знайди всі відмінності",
+    differences: [
+      { x: 65, y: 150, r: 22 },
+      { x: 210, y: 65, r: 22 },
+      { x: 350, y: 145, r: 22 }
+    ],
+    left: `
+      <svg viewBox="0 0 420 210" width="420" height="210">
+        <rect width="420" height="210" rx="14" fill="#10101b"/>
+
+        <circle cx="65" cy="65" r="28" fill="#22d3ee"/>
+        <rect x="175" y="35" width="70" height="60" rx="10" fill="#8b5cf6"/>
+        <polygon points="325,35 365,105 285,105" fill="#ec4899"/>
+
+        <rect x="35" y="130" width="60" height="45" fill="#f5c542"/>
+        <circle cx="65" cy="150" r="12" fill="#10101b"/>
+
+        <circle cx="210" cy="145" r="32" fill="#34d399"/>
+        <circle cx="350" cy="145" r="30" fill="#f97316"/>
+        <circle cx="350" cy="145" r="10" fill="#22d3ee"/>
+      </svg>`,
+
+    right: `
+      <svg viewBox="0 0 420 210" width="420" height="210">
+        <rect width="420" height="210" rx="14" fill="#10101b"/>
+
+        <circle cx="65" cy="65" r="28" fill="#22d3ee"/>
+        <rect x="175" y="35" width="70" height="60" rx="10" fill="#ec4899"/>
+        <polygon points="325,35 365,105 285,105" fill="#ec4899"/>
+
+        <rect x="35" y="130" width="60" height="45" fill="#f5c542"/>
+        <!-- відмінність 1 -->
+
+        <circle cx="210" cy="145" r="20" fill="#34d399"/>
+        <!-- відмінність 2 -->
+
+        <circle cx="350" cy="145" r="30" fill="#f97316"/>
+        <!-- відмінність 3 -->
+      </svg>`
+  },
+
+  {
+    q: "Уважно порівняй дві картинки",
+    differences: [
+      { x: 75, y: 80, r: 20 },
+      { x: 210, y: 145, r: 20 },
+      { x: 345, y: 80, r: 20 }
+    ],
+    left: `
+      <svg viewBox="0 0 420 210" width="420" height="210">
+        <rect width="420" height="210" rx="14" fill="#10101b"/>
+
+        <circle cx="75" cy="80" r="30" fill="#8b5cf6"/>
+        <circle cx="75" cy="80" r="10" fill="#f5c542"/>
+
+        <rect x="175" y="115" width="70" height="60" rx="12" fill="#22d3ee"/>
+        <circle cx="210" cy="145" r="15" fill="#ec4899"/>
+
+        <polygon points="345,45 380,105 310,105" fill="#f97316"/>
+        <circle cx="345" cy="80" r="10" fill="#22d3ee"/>
+      </svg>`,
+
+    right: `
+      <svg viewBox="0 0 420 210" width="420" height="210">
+        <rect width="420" height="210" rx="14" fill="#10101b"/>
+
+        <circle cx="75" cy="80" r="30" fill="#8b5cf6"/>
+        <!-- відмінність 1 -->
+
+        <rect x="175" y="115" width="70" height="60" rx="12" fill="#22d3ee"/>
+        <circle cx="210" cy="145" r="8" fill="#ec4899"/>
+        <!-- відмінність 2 -->
+
+        <polygon points="345,45 380,105 310,105" fill="#f97316"/>
+        <circle cx="345" cy="80" r="10" fill="#f5c542"/>
+        <!-- відмінність 3 -->
+      </svg>`
+  }
+];
+
+
 /* ---------- shop items ---------- */
 const BODIES = [
   {id:"b1",name:"Смарагд",cost:0,bg:"#10b981"},
@@ -280,6 +433,24 @@ function startImageTest(seed){
   const pool = seed!=null ? seededShuffle(IMAGE_BANK, seed) : shuffleRandom(IMAGE_BANK);
   testState = { questions: pool.slice(0,6), idx:0, score:0, answered:false, coinsEarned:0, done:false, mode:"image" };
 }
+
+function startDifferencesTest(seed){
+  const pool = seed != null
+    ? seededShuffle(DIFFERENCES_BANK, seed)
+    : shuffleRandom(DIFFERENCES_BANK);
+
+  testState = {
+    questions: pool.slice(0, 3),
+    idx: 0,
+    score: 0,
+    found: 0,
+    answered: false,
+    coinsEarned: 0,
+    done: false,
+    mode: "differences"
+  };
+}
+
 function startDuelTest(seed){
   const pool = seededShuffle(ALL_QUESTIONS, seed);
   testState = { questions: pool.slice(0,10), idx:0, score:0, answered:false, coinsEarned:0, done:false, mode:"duel" };
@@ -315,19 +486,42 @@ function renderTest(){
             <button class="grad-btn" data-action="start-classic">Почати тест</button>
           </div>
         </div>`;
-    } else {
-      heroTitle = "IQ по картинках 🧩";
-      heroText = "6 завдань із фігурами, закономірностями та візуальною логікою.";
-      body = `
-        <div class="image-test-menu">
-          <div class="image-test-card">
-            <div class="test-type-badge">РЕЖИМ КАРТИНОК</div>
-            <h3>IQ по картинках</h3>
-            <p>6 завдань із фігурами, закономірностями та візуальною логікою.</p>
-            <button class="grad-btn" data-action="start-image">Почати тест</button>
-          </div>
-        </div>`;
-    }
+    } else if(testMode==="image"){
+  heroTitle = "IQ по картинках 🧩";
+  heroText = "6 завдань із фігурами, закономірностями та візуальною логікою.";
+
+  body = `
+    <div class="image-test-menu">
+      <div class="image-test-card">
+        <div class="test-type-badge">РЕЖИМ КАРТИНОК</div>
+        <h3>IQ по картинках</h3>
+        <p>6 завдань із фігурами, закономірностями та візуальною логікою.</p>
+        <button class="grad-btn" data-action="start-image">Почати тест</button>
+      </div>
+    </div>`;
+
+} else if(testMode==="dima"){
+  heroTitle = "Знайди відмінності 🔎";
+  heroText = "Порівнюй дві картинки та знаходь усі приховані відмінності.";
+
+  body = `
+    <div class="image-test-menu">
+      <div class="image-test-card">
+        <div class="test-type-badge">ЗНАЙДИ ВІДМІННОСТІ</div>
+        <h3>Уважність та логіка</h3>
+        <p>
+          3 раунди. У кожному раунді потрібно знайти 3 відмінності.
+          Чим більше знайдеш — тим більше балів.
+        </p>
+        <button class="grad-btn" data-action="start-differences">
+          Почати
+        </button>
+      </div>
+    </div>`;
+
+}
+    
+     
     return `
       <div class="card">
         <div class="hero-row">
@@ -385,6 +579,74 @@ function renderTest(){
     : testState.mode==="duel" ? "Дуельний тест"
     : testState.mode==="image" ? "IQ по картинках"
     : "Класичний тест";
+  if(testState.mode==="differences"){
+  const q = testState.questions[testState.idx];
+  const total = testState.questions.length;
+
+  return `
+    <div class="card difference-test">
+
+      <div class="muted difference-heading">
+        ЗНАЙДИ ВІДМІННОСТІ
+      </div>
+
+      <div class="q-progress">
+        ${testState.questions.map((_,i)=>{
+          const cls =
+            i < testState.idx ? "done" :
+            i === testState.idx ? "now" : "";
+          return `<i class="${cls}"></i>`;
+        }).join("")}
+      </div>
+
+      <div class="difference-info">
+        Раунд ${testState.idx + 1} з ${total}
+      </div>
+
+      <div class="q-text">
+        ${q.q}
+      </div>
+
+      <div class="difference-score">
+        Знайдено: <b>${testState.found || 0}/3</b>
+      </div>
+
+      <div class="difference-images">
+
+        <div class="difference-picture">
+          <div class="difference-label">КАРТИНКА A</div>
+          ${q.left}
+        </div>
+
+        <div class="difference-picture">
+          <div class="difference-label">КАРТИНКА B</div>
+          ${q.right}
+        </div>
+
+      </div>
+
+      <div class="difference-hint">
+        💡 Натискай на області, де бачиш відмінність.
+      </div>
+
+      <div class="difference-targets">
+        ${q.differences.map((d,i)=>`
+          <button
+            class="difference-target"
+            style="
+              left:${(d.x/420)*100}%;
+              top:${(d.y/210)*100}%;
+            "
+            data-action="difference"
+            data-i="${i}">
+          </button>
+        `).join("")}
+      </div>
+
+    </div>
+  `;
+}
+
 
   if(testState.mode==="image"){
     return `
@@ -439,6 +701,50 @@ function gauge(pct, big, label){
     </div>`;
 }
 
+async function handleDifference(i){
+
+  if(testState.answered) return;
+
+  const q = testState.questions[testState.idx];
+
+  const target = document.querySelectorAll(".difference-target")[i];
+
+  if(!target || target.classList.contains("found")){
+    return;
+  }
+
+  target.classList.add("found");
+
+  testState.found = (testState.found || 0) + 1;
+  testState.score++;
+
+  if(testState.found >= 3){
+
+    testState.answered = true;
+
+    await new Promise(r=>setTimeout(r,700));
+
+    testState.idx++;
+    testState.found = 0;
+    testState.answered = false;
+
+    if(testState.idx >= testState.questions.length){
+
+      testState.done = true;
+
+      const coins = testState.score * 10;
+
+      testState.coinsEarned = coins;
+
+      profile.coins += coins;
+      profile.gamesPlayed++;
+
+      await saveProfile();
+    }
+
+    render();
+  }
+}
 async function handleAnswer(i){
   if(testState.answered) return;
   testState.answered = true;
@@ -706,9 +1012,11 @@ document.addEventListener("click", async (e)=>{
   if(t.dataset.action==="retry-level"){ startLevelTest(parseInt(t.dataset.lvl)); render(); return; }
   if(t.dataset.action==="start-classic"){ startClassicTest(); render(); return; }
   if(t.dataset.action==="start-image"){ startImageTest(); render(); return; }
+  if(t.dataset.action==="start-differences"){startDifferencesTest(); render(); return;}
   if(t.dataset.action==="to-map"){ testState = null; render(); return; }
   if(t.dataset.action==="back-tests"){ testState = null; render(); return; }
   if(t.dataset.action==="answer"){ handleAnswer(parseInt(t.dataset.i)); return; }
+  if(t.dataset.action==="difference"){handleDifference(parseInt(t.dataset.i)); return;}
   if(t.dataset.shopcat){ shopCat = t.dataset.shopcat; render(); return; }
   if(t.dataset.action==="buy"){ buyItem(t.dataset.cat, t.dataset.id); return; }
   if(t.dataset.action==="equip"){ equipItem(t.dataset.cat, t.dataset.id); return; }

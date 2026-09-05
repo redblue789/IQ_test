@@ -192,3 +192,134 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .vs-avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 8px;}
 .vs-mid{font-family:'Space Grotesk';font-weight:700;color:var(--text-dim);font-size:18px;}
 .winner-banner{text-align:center;font-family:'Space Grotesk';font-size:22px;font-weight:700;margin:14px 0;}
+
+
+/* ===== DIFFERENCES MODE ===== */
+
+.difference-test{
+  position:relative;
+}
+
+.difference-heading{
+  font-size:12px;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+
+.difference-info{
+  color:var(--text-dim);
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.difference-score{
+  text-align:center;
+  margin:-8px 0 18px;
+  color:var(--text-dim);
+  font-size:14px;
+}
+
+.difference-score b{
+  color:var(--cyan);
+  font-size:17px;
+}
+
+.difference-images{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.difference-picture{
+  position:relative;
+  background:#0b0b14;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  overflow:hidden;
+}
+
+.difference-picture svg{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.difference-label{
+  position:absolute;
+  z-index:2;
+  top:10px;
+  left:10px;
+  background:rgba(7,7,12,.85);
+  border:1px solid var(--line);
+  color:var(--cyan);
+  padding:5px 9px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.5px;
+}
+
+.difference-hint{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:13px;
+  margin-top:16px;
+}
+
+.difference-targets{
+  position:absolute;
+  left:50%;
+  top:260px;
+  width:calc(50% - 32px);
+  height:250px;
+  pointer-events:none;
+}
+
+.difference-target{
+  position:absolute;
+  width:44px;
+  height:44px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:transparent;
+  border:3px solid transparent;
+  pointer-events:auto;
+  cursor:pointer;
+}
+
+.difference-target:hover{
+  border-color:var(--cyan);
+  background:rgba(34,211,238,.12);
+  box-shadow:0 0 20px rgba(34,211,238,.4);
+}
+
+.difference-target.found{
+  border-color:var(--good);
+  background:rgba(52,211,153,.18);
+  box-shadow:0 0 22px rgba(52,211,153,.5);
+  animation:differenceFound .3s ease;
+}
+
+@keyframes differenceFound{
+  0%{
+    transform:translate(-50%,-50%) scale(.7);
+    opacity:.4;
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1);
+    opacity:1;
+  }
+}
+
+@media(max-width:700px){
+
+  .difference-images{
+    grid-template-columns:1fr;
+  }
+
+  .difference-targets{
+    display:none;
+  }
+
+}
